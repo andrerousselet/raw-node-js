@@ -1,4 +1,4 @@
-import { Readable } from "node:stream";
+import { Readable, Writable, Transform } from "node:stream";
 
 const ONE_SECOND = 1000;
 
@@ -19,4 +19,21 @@ class CountToHundred extends Readable {
   }
 };
 
-new CountToHundred().pipe(process.stdout);
+class InvertNumber extends Transform {
+  _transform(chunk, _encoding, callback) {
+    const transformed = Number(chunk.toString()) * -1;
+
+    callback(null, Buffer.from(String(transformed)));
+  }
+}
+
+class MultiplyByTen extends Writable {
+  _write(chunk, _encoding, callback) {
+    console.log(Number(chunk.toString()) * 10);
+    callback();
+  }
+};
+
+new CountToHundred()
+  .pipe(new InvertNumber())
+  .pipe(new MultiplyByTen());
