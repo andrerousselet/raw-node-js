@@ -6,7 +6,7 @@ class CountToHundred extends Readable {
   index = 0;
 
   _read() {
-    const i = this.index += 1;
+    const i = (this.index += 1);
 
     setTimeout(() => {
       if (i > 100) {
@@ -15,9 +15,9 @@ class CountToHundred extends Readable {
         const buffer = Buffer.from(String(i));
         this.push(buffer);
       }
-    }, ONE_SECOND)
+    }, ONE_SECOND);
   }
-};
+}
 
 class InvertNumber extends Transform {
   _transform(chunk, _encoding, callback) {
@@ -32,8 +32,6 @@ class MultiplyByTen extends Writable {
     console.log(Number(chunk.toString()) * 10);
     callback();
   }
-};
+}
 
-new CountToHundred()
-  .pipe(new InvertNumber())
-  .pipe(new MultiplyByTen());
+new CountToHundred().pipe(new InvertNumber()).pipe(new MultiplyByTen());
